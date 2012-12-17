@@ -1,12 +1,18 @@
 // Global Apprise variables
-var $Apprise = $('<div class="apprise">'),
-		$overlay = $('<div class="apprise-overlay">'),
-		$body = $('body'),
-		$window = $(window),
+var $Apprise = null,
+		$overlay = null,
+		$body = null,
+		$window = null,
 		AppriseQueue = [];
 
 // Add overlay and set opacity for cross-browser compatibility
 $(function() {
+	
+	$Apprise = $('<div class="apprise">'),
+	$overlay = $('<div class="apprise-overlay">'),
+	$body = $('body'),
+	$window = $(window)
+	
 	$body.append( $overlay.css('opacity', '.94') ).append($Apprise);
 });
 
