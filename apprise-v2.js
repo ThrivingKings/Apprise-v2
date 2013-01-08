@@ -3,15 +3,16 @@ var $Apprise = null,
 		$overlay = null,
 		$body = null,
 		$window = null,
+		$cA = null,
 		AppriseQueue = [];
 
 // Add overlay and set opacity for cross-browser compatibility
 $(function() {
 	
-	$Apprise = $('<div class="apprise">'),
-	$overlay = $('<div class="apprise-overlay">'),
-	$body = $('body'),
-	$window = $(window)
+	$Apprise = $('<div class="apprise">');
+	$overlay = $('<div class="apprise-overlay">');
+	$body = $('body');
+	$window = $(window);
 	
 	$body.append( $overlay.css('opacity', '.94') ).append($Apprise);
 });
@@ -24,7 +25,7 @@ function Apprise(text, options) {
 	}
 	
 	// Necessary variables
-	var $this = this,
+	var $me = this,
 			$_inner = $('<div class="apprise-inner">'),
 			$_buttons = $('<div class="apprise-buttons">'),
 			$_input = $('<input type="text">');
@@ -35,22 +36,22 @@ function Apprise(text, options) {
 		animation: 700,	// Animation speed
 		buttons: {
 			confirm: {
-				action: function() { $this.close(); }, // Callback function
+				action: function() { $me.dissapear(); }, // Callback function
 				className: null, // Custom class name(s)
 				id: 'confirm', // Element ID
-				text: 'Ok', // Button text
+				text: 'Ok' // Button text
 			}
 		},
 		input: false, // input dialog
-		override: true, // Override browser navigation while Apprise is visible
+		override: true // Override browser navigation while Apprise is visible
 	};
 	
 	// Merge settings with options
 	$.extend(settings, options);
 	
 	// Close current Apprise, exit
-	if(text==='close') { 
-		$this.close();
+	if(text=='close') { 
+		$cA.dissapear();
 		return;
 	}
 	
@@ -82,7 +83,7 @@ function Apprise(text, options) {
 	};
 	
 	// Close function
-	this.close = function() {
+	this.dissapear = function() {
 		
 		$Apprise.animate({
 			top: '-100%'
@@ -111,11 +112,11 @@ function Apprise(text, options) {
 		$window.bind('keydown', function(e) {
 			// Close if the ESC key is pressed
 			if(e.keyCode===27) {
-				$this.close();
+				$me.dissapear();
 			} else if(e.keyCode===13) {
 
 				if(Object.keys(settings.buttons).length===1) {
-					$this.close();
+					$me.dissapear();
 				}
 			}
 		});
@@ -147,7 +148,7 @@ function Apprise(text, options) {
 				};
 				
 				button.action( response );
-				//$this.close();
+				//$me.dissapear();
 			});
 		}
 	});
@@ -160,12 +161,13 @@ function Apprise(text, options) {
 	}
 	
 	// Adjust dimensions based on window
-	$this.adjustWidth();
+	$me.adjustWidth();
 	
-	$window.resize( function() { $this.adjustWidth() } );
+	$window.resize( function() { $me.adjustWidth() } );
 	
 	// Append elements, show Apprise
 	$Apprise.html('').append( $_inner.append('<div class="apprise-content">' + text + '</div>') ).append($_buttons);
+	$cA = this;
 	
 	if(settings.input) {
 		$_inner.find('.apprise-content').append( $('<div class="apprise-input">').append( $_input ) );
@@ -173,11 +175,11 @@ function Apprise(text, options) {
 	
 	$overlay.fadeIn(300);
 	$Apprise.show().animate({
-		top: '20%',
+		top: '20%'
 	}, 
 		settings.animation, 
 		function() {
-			$this.keyPress();
+			$me.keyPress();
 		}
 	);
 	
