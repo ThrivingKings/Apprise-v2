@@ -112,10 +112,21 @@ function Apprise(text, options) {
 		$window.bind('keydown', function(e) {
 			// Close if the ESC key is pressed
 			if(e.keyCode===27) {
-				$me.dissapear();
+				
+				if(settings.buttons.cancel) {
+					
+					$("#apprise-btn-" + settings.buttons.cancel.id).trigger('click');
+				} else {
+					
+					$me.dissapear();
+				}
 			} else if(e.keyCode===13) {
 
-				if(Object.keys(settings.buttons).length===1) {
+				if(settings.buttons.confirm) {
+					
+					$("#apprise-btn-" + settings.buttons.confirm.id).trigger('click');
+				} else {
+					
 					$me.dissapear();
 				}
 			}
