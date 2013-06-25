@@ -68,14 +68,19 @@ function Apprise(text, options) {
 		
 		var window_width = $window.width(), w = "20%", l = "40%";
 
-		if(window_width<=800) {
-			w = "90%", l = "5%";
-		} else if(window_width <= 1400 && window_width > 800) {
-			w = "70%", l = "15%";
-		} else if(window_width <= 1800 && window_width > 1400) {
-			w = "50%", l = "25%";
-		} else if(window_width <= 2200 && window_width > 1800) {
-			w = "30%", l = "35%";
+		if (settings.width != null) {
+			w = settings.width;
+      l = (window_width-w) / 2;
+		} else {
+			if(window_width<=800) {
+				w = "90%", l = "5%";
+			} else if(window_width <= 1400 && window_width > 800) {
+				w = "70%", l = "15%";
+			} else if(window_width <= 1800 && window_width > 1400) {
+				w = "50%", l = "25%";
+			} else if(window_width <= 2200 && window_width > 1800) {
+				w = "30%", l = "35%";
+			}
 		}
 		
 		$Apprise.css('width', w).css('left', l);
