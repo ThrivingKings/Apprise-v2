@@ -46,7 +46,7 @@ function Apprise(text, options) {
 	};
 	
 	// Merge settings with options
-	$.extend(settings, options);
+	$.extend(true, settings, options);
 	
 	// Close current Apprise, exit
 	if(text=='close') { 
