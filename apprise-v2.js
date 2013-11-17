@@ -11,7 +11,7 @@ $(function() {
 	$overlay = $('<div class="apprise-overlay">');
 	$body = $('body');
 	$window = $(window);
-        $document = $(document);
+	$document = $(document);
 	
 	$body.append($overlay).append($Apprise);
 });
@@ -177,10 +177,7 @@ function Apprise(text, options) {
 	
 	// Adjust dimensions based on window
 	$me.adjustWidth();
-	
-	$window.resize(function() { 
-            $me.adjustWidth();
-        });
+	$window.resize(function() { $me.adjustWidth(); });
 	
 	// Append elements, show Apprise
 	$Apprise.html('').append( $_inner.append('<div class="apprise-content">' + text + '</div>') ).append($_buttons);
