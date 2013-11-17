@@ -42,7 +42,9 @@ function Apprise(text, options) {
 			}
 		},
 		input: false, // input dialog
-		override: true // Override browser navigation while Apprise is visible
+		override: true, // Override browser navigation while Apprise is visible
+		noautocorrect: false, // Disable autocorrect on input dialog
+		noautocapitalize: false  // Disable autocapitalize on input dialog
 	};
 	
 	// Merge settings with options
@@ -60,6 +62,14 @@ function Apprise(text, options) {
 		AppriseQueue.push({text: text, options: settings});
 	
 		return;
+	}
+
+	// If specified, turn off autocorrect and autocapitalize on mobile phones
+	if (settings.noautocorrect) {
+		$_input.attr('autocorrect', 'off');
+	}
+	if (settings.noautocapitalize) {
+		$_input.attr('nocapitalize', 'off');
 	}
 	
 	// Width adjusting function
