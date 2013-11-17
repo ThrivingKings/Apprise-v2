@@ -42,9 +42,8 @@ function Apprise(text, options) {
 			}
 		},
 		input: false, // input dialog
-		override: true, // Override browser navigation while Apprise is visible
-		noautocorrect: false, // Disable autocorrect on input dialog
-		noautocapitalize: false  // Disable autocapitalize on input dialog
+		inputAttributes: null, // additional attributes for the input dialog
+		override: true // Override browser navigation while Apprise is visible
 	};
 	
 	// Merge settings with options
@@ -64,12 +63,9 @@ function Apprise(text, options) {
 		return;
 	}
 
-	// If specified, turn off autocorrect and autocapitalize on mobile phones
-	if (settings.noautocorrect) {
-		$_input.attr('autocorrect', 'off');
-	}
-	if (settings.noautocapitalize) {
-		$_input.attr('autocapitalize', 'off');
+	// Apply the given attributes to the input text field, e.g. to specify autocorrect='off' on mobile phones
+	if (settings.inputAttributes) {
+		$_input.attr(settings.inputAttributes);
 	}
 	
 	// Width adjusting function
