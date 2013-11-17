@@ -3,18 +3,17 @@ var $Apprise = null,
 		$overlay = null,
 		$body = null,
 		$window = null,
-		$cA = null,
 		AppriseQueue = [];
 
-// Add overlay and set opacity for cross-browser compatibility
 $(function() {
 	
 	$Apprise = $('<div class="apprise">');
 	$overlay = $('<div class="apprise-overlay">');
 	$body = $('body');
 	$window = $(window);
+	$document = $(document);
 	
-	$body.append( $overlay.css('opacity', '.94') ).append($Apprise);
+	$body.append($overlay).append($Apprise);
 });
 
 function Apprise(text, options) {
@@ -34,6 +33,7 @@ function Apprise(text, options) {
 	var settings = {
 	
 		animation: 700,	// Animation speed
+		opacity: 0.94,  // Overlay opacity
 		buttons: {
 			confirm: {
 				action: function() { $me.dissapear(); }, // Callback function
@@ -43,15 +43,16 @@ function Apprise(text, options) {
 			}
 		},
 		input: false, // input dialog
+		inputAttributes: null, // additional attributes for the input dialog
 		override: true // Override browser navigation while Apprise is visible
 	};
 	
 	// Merge settings with options
-	$.extend(settings, options);
+	$.extend(true, settings, options);
 	
 	// Close current Apprise, exit
 	if(text=='close') { 
-		$cA.dissapear();
+		$me.dissapear();
 		return;
 	}
 	
@@ -61,6 +62,11 @@ function Apprise(text, options) {
 		AppriseQueue.push({text: text, options: settings});
 	
 		return;
+	}
+
+	// Apply the given attributes to the input text field, e.g. to specify autocorrect='off' on mobile phones
+	if (settings.inputAttributes) {
+		$_input.attr(settings.inputAttributes);
 	}
 	
 	// Width adjusting function
@@ -89,12 +95,12 @@ function Apprise(text, options) {
 			top: '-100%'
 		}, settings.animation, function() {
 			
-			$overlay.fadeOut(300);
+			$overlay.fadeOut(settings.animation / 2);
 			$Apprise.hide();
 			
 			// Unbind window listeners
 			$window.unbind("beforeunload");
-			$window.unbind("keydown");
+			$document.unbind("keydown");
 
 			// If in queue, run it
 			if(AppriseQueue[0]) { 
@@ -108,8 +114,7 @@ function Apprise(text, options) {
 	
 	// Keypress function
 	this.keyPress = function() {
-		
-		$window.bind('keydown', function(e) {
+		$document.bind('keydown', function(e) {
 			// Close if the ESC key is pressed
 			if(e.keyCode===27) {
 				
@@ -150,7 +155,7 @@ function Apprise(text, options) {
 			$_buttons.append($_button);
 			
 			// Callback (or close) function
-			$_button.on("click", function() {
+			$_button.click(function() {
 				
 				// Build response object
 				var response = {
@@ -158,8 +163,7 @@ function Apprise(text, options) {
 					input: ($_input.val() ? $_input.val() : null) // User inputted text
 				};
 				
-				button.action( response );
-				//$me.dissapear();
+				button.action(response);
 			});
 		}
 	});
@@ -173,18 +177,17 @@ function Apprise(text, options) {
 	
 	// Adjust dimensions based on window
 	$me.adjustWidth();
-	
-	$window.resize( function() { $me.adjustWidth() } );
+	$window.resize(function() { $me.adjustWidth(); });
 	
 	// Append elements, show Apprise
 	$Apprise.html('').append( $_inner.append('<div class="apprise-content">' + text + '</div>') ).append($_buttons);
-	$cA = this;
 	
 	if(settings.input) {
 		$_inner.find('.apprise-content').append( $('<div class="apprise-input">').append( $_input ) );
 	}
 	
-	$overlay.fadeIn(300);
+	$overlay.css('opacity', settings.opacity);
+	$overlay.fadeIn(settings.animation / 2);
 	$Apprise.show().animate({
 		top: '20%'
 	}, 
