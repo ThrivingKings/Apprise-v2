@@ -11,6 +11,7 @@ $(function() {
 	$overlay = $('<div class="apprise-overlay">');
 	$body = $('body');
 	$window = $(window);
+        $document = $(document);
 	
 	$body.append($overlay).append($Apprise);
 });
@@ -47,7 +48,7 @@ function Apprise(text, options) {
 	};
 	
 	// Merge settings with options
-	$.extend(settings, options);
+	$.extend(true, settings, options);
 	
 	// Close current Apprise, exit
 	if(text=='close') { 
@@ -99,7 +100,7 @@ function Apprise(text, options) {
 			
 			// Unbind window listeners
 			$window.unbind("beforeunload");
-			$window.unbind("keydown");
+			$document.unbind("keydown");
 
 			// If in queue, run it
 			if(AppriseQueue[0]) { 
@@ -113,8 +114,7 @@ function Apprise(text, options) {
 	
 	// Keypress function
 	this.keyPress = function() {
-		
-		$window.bind('keydown', function(e) {
+		$document.bind('keydown', function(e) {
 			// Close if the ESC key is pressed
 			if(e.keyCode===27) {
 				
@@ -178,7 +178,9 @@ function Apprise(text, options) {
 	// Adjust dimensions based on window
 	$me.adjustWidth();
 	
-	$window.resize( function() { $me.adjustWidth() } );
+	$window.resize(function() { 
+            $me.adjustWidth();
+        });
 	
 	// Append elements, show Apprise
 	$Apprise.html('').append( $_inner.append('<div class="apprise-content">' + text + '</div>') ).append($_buttons);
