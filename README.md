@@ -1,5 +1,5 @@
-Apprise-v2
-==========
+NO LONGER SUPPORTED. USE AT YOUR OWN RISK.
+===
 
 The, new and improved, attractive alert alternative for jQuery
 
